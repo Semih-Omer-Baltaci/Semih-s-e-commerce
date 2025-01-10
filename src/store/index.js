@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { thunk } from 'redux-thunk'
+import productReducer from './slices/productSlice'
 
 export const store = configureStore({
   reducer: {
-    // Add your reducers here
+    products: productReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk)
 })

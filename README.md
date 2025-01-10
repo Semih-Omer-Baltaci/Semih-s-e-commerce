@@ -12,6 +12,15 @@ A modern e-commerce application built with React, Redux, and Tailwind CSS.
 - React Toastify
 - Lucide React Icons
 
+## Features
+
+- Modern and responsive design
+- Image slider with multiple banners
+- Product catalog
+- Shopping cart functionality
+- User authentication
+- Secure checkout process
+
 ## Getting Started
 
 1. Clone the repository

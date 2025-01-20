@@ -6,6 +6,7 @@ import Hero from './components/Hero'
 import Slider from './components/Slider'
 import Testimonials from './components/Testimonials'
 import Shop from './components/Shop'
+import Footer from './components/Footer'
 
 const Home = () => (
   <main>
@@ -18,12 +19,13 @@ const Home = () => (
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
         </Routes>
+        <Footer />
       </div>
     </BrowserRouter>
   )

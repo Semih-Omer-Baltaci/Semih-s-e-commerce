@@ -18,13 +18,18 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white p-8 rounded shadow-md w-80">
-        <h2 className="text-2xl font-bold mb-4 text-center">Profil</h2>
-        <div className="mb-4 text-center">
-          <span className="font-semibold">Kullanıcı Adı:</span> {user.username}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-pink-100">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-96 flex flex-col items-center">
+        <img
+          src={user.avatar}
+          alt={user.username}
+          className="w-24 h-24 rounded-full border-4 border-blue-300 shadow mb-4 object-cover"
+        />
+        <h2 className="text-2xl font-bold mb-2 text-center">{user.username}</h2>
+        <div className="mb-4 text-center text-gray-600">
+          <span className="font-semibold">E-posta:</span> {user.email}
         </div>
-        <button onClick={handleLogout} className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-700 transition-colors">Çıkış Yap</button>
+        <button onClick={handleLogout} className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-700 transition-colors mt-4">Çıkış Yap</button>
       </div>
     </div>
   )

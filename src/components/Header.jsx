@@ -8,6 +8,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const user = useSelector(state => state.auth.user)
+  const cartCount = useSelector(state => state.cart.items.length)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -47,9 +48,14 @@ const Header = () => {
 
           {/* Desktop Right Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <ShoppingCart className="w-6 h-6" />
-            </button>
+            <Link to="/cart" className="relative p-2 hover:bg-gray-100 rounded-full">
+  <ShoppingCart className="w-6 h-6" />
+  {cartCount > 0 && (
+    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5">
+      {cartCount}
+    </span>
+  )}
+</Link>
             {isAuthenticated ? (
               <>
                 <span className="font-medium mr-2">{user?.username}</span>
@@ -68,9 +74,14 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-4">
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <ShoppingCart className="w-6 h-6" />
-            </button>
+            <Link to="/cart" className="relative p-2 hover:bg-gray-100 rounded-full">
+  <ShoppingCart className="w-6 h-6" />
+  {cartCount > 0 && (
+    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5">
+      {cartCount}
+    </span>
+  )}
+</Link>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2 hover:bg-gray-100 rounded-full"

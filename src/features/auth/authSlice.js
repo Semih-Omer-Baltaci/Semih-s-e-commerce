@@ -11,7 +11,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.user = action.payload
+      state.user = {
+        username: action.payload.username,
+        email: action.payload.email || 'user@example.com',
+        avatar: action.payload.avatar || `https://randomuser.me/api/portraits/men/1.jpg`
+      }
       state.isAuthenticated = true
       state.error = null
     },

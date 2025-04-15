@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -14,7 +15,9 @@ const Login = () => {
     e.preventDefault()
     // Dummy login: username: user, password: 1234
     if (username === 'user' && password === '1234') {
-      dispatch(login({ username }))
+      // random avatar için küçük bir fonksiyon
+      const avatarUrl = `https://randomuser.me/api/portraits/men/${Math.floor(Math.random()*10)+1}.jpg`
+      dispatch(login({ username, email: email || 'user@example.com', avatar: avatarUrl }))
       navigate('/profile')
     } else {
       dispatch(setError('Kullanıcı adı veya şifre hatalı'))
@@ -32,6 +35,13 @@ const Login = () => {
           onChange={e => setUsername(e.target.value)}
           className="w-full mb-3 px-3 py-2 border rounded"
           required
+        />
+        <input
+          type="email"
+          placeholder="E-posta (isteğe bağlı)"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          className="w-full mb-3 px-3 py-2 border rounded"
         />
         <input
           type="password"

@@ -1,36 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Filter, ChevronDown, Star } from 'lucide-react'
-import { useSelector } from 'react-redux'
-
-const products = [
-  {
-    id: 1,
-    name: 'Coral High Classic Backpack',
-    price: 299.99,
-    rating: 4.5,
-    image: '/products/backpack1.jpg',
-    category: 'Backpacks',
-    colors: ['blue', 'black', 'gray']
-  },
-  {
-    id: 2,
-    name: 'Urban Explorer Bag',
-    price: 349.99,
-    rating: 4.8,
-    image: '/products/backpack2.jpg',
-    category: 'Backpacks',
-    colors: ['green', 'brown', 'black']
-  },
-  // Add more products as needed
-]
+import { useSelector, useDispatch } from 'react-redux'
+import { addToCart } from '../features/cart/cartSlice'
 
 const categories = [
-  'All Products',
-  'Backpacks',
-  'School Bags',
-  'Travel Bags',
-  'Accessories'
+  'Tümü',
+  'Okul Çantası',
+  'Günlük Çanta',
+  'Kadın Kol Çantası',
+  'Sırt Çantası',
+  'Aksesuar'
 ]
+
+const API_URL = 'https://fakestoreapi.com/products' // örnek endpoint
 
 const Shop = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
@@ -38,6 +20,28 @@ const Shop = () => {
   const [priceRange, setPriceRange] = useState([0, 1000])
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const [alert, setAlert] = useState('')
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    fetch(API_URL)
+      .then((res) => {
+        if (!res.ok) throw new Error('API hatası');
+        return res.json();
+      })
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError('Ürünler yüklenemedi');
+        setLoading(false);
+      });
+  }, []);
 
   const handleAddToCart = (product) => {
     if (!isAuthenticated) {
@@ -45,10 +49,26 @@ const Shop = () => {
       setTimeout(() => setAlert(''), 2000)
       return
     }
-    // Sepete ekleme işlemi burada olacak (örnek: dispatch(addToCart(product)))
+    dispatch(addToCart({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image
+    }))
     setAlert('Ürün sepete eklendi!')
     setTimeout(() => setAlert(''), 1500)
   }
+
+  // Kategori ve fiyat filtrelemesi
+  const filteredProducts = products.filter(product => {
+    const matchCategory =
+      selectedCategory === 'Tümü' ||
+      product.category === selectedCategory ||
+      (selectedCategory === 'All Products');
+    const matchPrice =
+      product.price >= priceRange[0] && product.price <= priceRange[1];
+    return matchCategory && matchPrice;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -175,8 +195,13 @@ const Shop = () => {
                   {alert}
                 </div>
               )}
+              {loading && <div className="text-center py-8">Ürünler yükleniyor...</div>}
+              {error && <div className="text-center py-8 text-red-600">{error}</div>}
+              {!loading && !error && filteredProducts.length === 0 && (
+                <div className="text-center py-8">Seçili kategoriye uygun ürün bulunamadı.</div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                   <div
                     key={product.id}
                     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
@@ -189,12 +214,12 @@ const Shop = () => {
                       />
                     </div>
                     <div className="p-4">
-                      <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                      <h3 className="font-semibold text-lg mb-2">{product.title}</h3>
                       <div className="flex items-center mb-2">
                         <div className="flex items-center text-yellow-400">
                           <Star className="w-4 h-4 fill-current" />
                           <span className="ml-1 text-sm text-gray-600">
-                            {product.rating}
+                            {product.rating?.rate}
                           </span>
                         </div>
                       </div>

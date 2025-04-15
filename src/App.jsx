@@ -9,6 +9,7 @@ import Shop from './components/Shop'
 import Footer from './components/Footer'
 import Login from './components/Login'
 import Profile from './components/Profile'
+import Cart from './components/Cart'
 
 const Home = () => (
   <main>
@@ -24,6 +25,7 @@ function App() {
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
         <Routes>
+  <Route path="/cart" element={<Cart />} />
           <Route exact path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/login" element={<Login />} />

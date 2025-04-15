@@ -7,6 +7,8 @@ import Slider from './components/Slider'
 import Testimonials from './components/Testimonials'
 import Shop from './components/Shop'
 import Footer from './components/Footer'
+import Login from './components/Login'
+import Profile from './components/Profile'
 
 const Home = () => (
   <main>
@@ -24,6 +26,8 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />
       </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Filter, ChevronDown, Star } from 'lucide-react'
+import { useSelector } from 'react-redux'
 
 const products = [
   {
@@ -35,6 +36,19 @@ const Shop = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('All Products')
   const [priceRange, setPriceRange] = useState([0, 1000])
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  const [alert, setAlert] = useState('')
+
+  const handleAddToCart = (product) => {
+    if (!isAuthenticated) {
+      setAlert('Lütfen giriş yapmadan önce sepete ürün ekleyemezsiniz!')
+      setTimeout(() => setAlert(''), 2000)
+      return
+    }
+    // Sepete ekleme işlemi burada olacak (örnek: dispatch(addToCart(product)))
+    setAlert('Ürün sepete eklendi!')
+    setTimeout(() => setAlert(''), 1500)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -156,39 +170,44 @@ const Shop = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <div
-                  key={product.id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  <div className="relative pb-[100%]">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                    <div className="flex items-center mb-2">
-                      <div className="flex items-center text-yellow-400">
-                        <Star className="w-4 h-4 fill-current" />
-                        <span className="ml-1 text-sm text-gray-600">
-                          {product.rating}
-                        </span>
+             {alert && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+                  {alert}
+                </div>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  >
+                    <div className="relative pb-[100%]">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                      <div className="flex items-center mb-2">
+                        <div className="flex items-center text-yellow-400">
+                          <Star className="w-4 h-4 fill-current" />
+                          <span className="ml-1 text-sm text-gray-600">
+                            {product.rating}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg font-bold">₺{product.price}</span>
+                        <button onClick={() => handleAddToCart(product)} className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors">
+                          Sepete Ekle
+                        </button>
                       </div>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">₺{product.price}</span>
-                      <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors">
-                        Add to Cart
-                      </button>
-                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
           </div>
         </div>
       </div>

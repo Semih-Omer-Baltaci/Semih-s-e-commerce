@@ -1,9 +1,20 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X, ShoppingCart, User } from 'lucide-react'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../features/auth/authSlice'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  const user = useSelector(state => state.auth.user)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/')
+  }
 
   const navigation = [
     { name: 'Ana Sayfa', href: '/' },
@@ -39,10 +50,20 @@ const Header = () => {
             <button className="p-2 hover:bg-gray-100 rounded-full">
               <ShoppingCart className="w-6 h-6" />
             </button>
-            <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors">
-              <User className="w-5 h-5 inline-block mr-2" />
-              Giriş Yap
-            </button>
+            {isAuthenticated ? (
+              <>
+                <span className="font-medium mr-2">{user?.username}</span>
+                <Link to="/profile" className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors flex items-center">
+                  <User className="w-5 h-5 inline-block mr-2" /> Profil
+                </Link>
+                <button onClick={handleLogout} className="ml-2 px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Çıkış</button>
+              </>
+            ) : (
+              <button onClick={() => navigate('/login')} className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors">
+                <User className="w-5 h-5 inline-block mr-2" />
+                Giriş Yap
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -77,10 +98,20 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors">
-                <User className="w-5 h-5 inline-block mr-2" />
-                Giriş Yap
-              </button>
+              {isAuthenticated ? (
+                <>
+                  <span className="font-medium mr-2">{user?.username}</span>
+                  <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors flex items-center">
+                    <User className="w-5 h-5 inline-block mr-2" /> Profil
+                  </Link>
+                  <button onClick={() => { handleLogout(); setIsMenuOpen(false)}} className="mt-2 px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Çıkış</button>
+                </>
+              ) : (
+                <button onClick={() => { navigate('/login'); setIsMenuOpen(false)}} className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors">
+                  <User className="w-5 h-5 inline-block mr-2" />
+                  Giriş Yap
+                </button>
+              )}
             </div>
           </div>
         )}

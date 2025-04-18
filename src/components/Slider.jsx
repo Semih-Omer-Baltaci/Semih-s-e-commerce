@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import backpackBanner from '../assets/images/kareanabanner-kiz-2-tr.jpg'
 import coralBanner from '../assets/images/anabanner02-k74-2-tr.jpg'
@@ -10,6 +11,7 @@ const sliderData = [
     title: 'Back to School Collection',
     subtitle: 'Trendy Backpacks for Every Style',
     buttonText: 'Shop Now',
+    buttonLink: '/shop',
     bgColor: 'bg-pink-100'
   },
   {
@@ -18,6 +20,7 @@ const sliderData = [
     title: 'Coral High Original',
     subtitle: 'The Perfect Backpack for Every Adventure',
     buttonText: 'Explore More',
+    buttonLink: '/shop',
     bgColor: 'bg-sky-100'
   }
 ]
@@ -59,9 +62,12 @@ const Slider = () => {
               <div className="w-1/2 text-left space-y-6">
                 <h2 className="text-5xl font-bold text-gray-800">{slide.title}</h2>
                 <p className="text-xl text-gray-600">{slide.subtitle}</p>
-                <button className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors">
+                <Link
+                  to={slide.buttonLink}
+                  className="inline-block bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors"
+                >
                   {slide.buttonText}
-                </button>
+                </Link>
               </div>
               <div className="w-1/2">
                 <img

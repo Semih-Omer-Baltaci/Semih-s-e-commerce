@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Filter, ChevronDown, Star } from 'lucide-react'
+import { Filter, ChevronDown, Star, Plus, Minus } from 'lucide-react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addToCart } from '../features/cart/cartSlice'
 
@@ -43,20 +43,56 @@ const Shop = () => {
       });
   }, []);
 
+  // Track product quantities in local state
+  const [productQuantities, setProductQuantities] = useState({});
+
+  // Increase quantity for a specific product
+  const increaseQuantity = (productId) => {
+    setProductQuantities(prev => ({
+      ...prev,
+      [productId]: (prev[productId] || 1) + 1
+    }))
+  }
+
+  // Decrease quantity for a specific product
+  const decreaseQuantity = (productId) => {
+    setProductQuantities(prev => ({
+      ...prev,
+      [productId]: Math.max(1, (prev[productId] || 1) - 1)
+    }))
+  }
+
+  // Get quantity for a specific product (default to 1)
+  const getQuantity = (productId) => {
+    return productQuantities[productId] || 1
+  }
+
   const handleAddToCart = (product) => {
     if (!isAuthenticated) {
       setAlert('Lütfen giriş yapmadan önce sepete ürün ekleyemezsiniz!')
       setTimeout(() => setAlert(''), 2000)
       return
     }
+    
+    const quantity = getQuantity(product.id);
+    
+    // Add to cart with the selected quantity
     dispatch(addToCart({
       id: product.id,
       title: product.title,
       price: product.price,
-      image: product.image
+      image: product.image,
+      quantity: quantity // Send quantity directly to the cartSlice
     }))
-    setAlert('Ürün sepete eklendi!')
+    
+    setAlert(`${quantity} adet ürün sepete eklendi!`)
     setTimeout(() => setAlert(''), 1500)
+    
+    // Reset quantity back to 1
+    setProductQuantities(prev => ({
+      ...prev,
+      [product.id]: 1
+    }))
   }
 
   // Kategori ve fiyat filtrelemesi
@@ -225,9 +261,29 @@ const Shop = () => {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-lg font-bold">₺{product.price}</span>
-                        <button onClick={() => handleAddToCart(product)} className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors">
-                          Sepete Ekle
-                        </button>
+                        <div className="flex items-center">
+                          <div className="flex items-center border rounded-l-md mr-2">
+                            <button 
+                              onClick={() => decreaseQuantity(product.id)} 
+                              className="px-2 py-1 text-gray-600 hover:bg-gray-100"
+                            >
+                              <Minus size={16} />
+                            </button>
+                            <span className="px-3">{getQuantity(product.id)}</span>
+                            <button 
+                              onClick={() => increaseQuantity(product.id)} 
+                              className="px-2 py-1 text-gray-600 hover:bg-gray-100"
+                            >
+                              <Plus size={16} />
+                            </button>
+                          </div>
+                          <button 
+                            onClick={() => handleAddToCart(product)} 
+                            className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
+                          >
+                            Sepete Ekle
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

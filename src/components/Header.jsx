@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X, ShoppingCart, User } from 'lucide-react'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../features/auth/authSlice'
+import SemihsBagsLogo from '../assets/logos/semihsBagsLogo'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -29,8 +30,9 @@ const Header = () => {
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold">
-            LOGO
+          <Link to="/" className="flex items-center space-x-2">
+            <SemihsBagsLogo size="default" />
+            <span className="text-2xl font-bold text-[#8B5A2B]">Semih's Bags</span>
           </Link>
 
           {/* Desktop Navigation */}

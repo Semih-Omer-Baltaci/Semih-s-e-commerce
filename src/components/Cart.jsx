@@ -1,14 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { removeFromCart, clearCart, decreaseQuantity, addToCart } from '../features/cart/cartSlice'
 
 const Cart = () => {
   const items = useSelector(state => state.cart.items)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  
+  const handleProceedToPayment = () => {
+    // Redirect to payment options page
+    navigate('/payment')
+  }
 
   if (items.length === 0) {
-    return <div className="p-8 text-center">Sepetiniz boş.</div>
+    return (
+      <div className="max-w-2xl mx-auto p-8 text-center">
+        <div>Sepetiniz boş.</div>
+      </div>
+    )
   }
 
   return (
@@ -38,7 +49,10 @@ const Cart = () => {
         <span className="font-bold">Toplam:</span>
         <span className="text-xl">₺{total.toFixed(2)}</span>
       </div>
-      <button onClick={() => dispatch(clearCart())} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">Sepeti Temizle</button>
+      <div className="flex justify-between mt-4">
+        <button onClick={() => dispatch(clearCart())} className="bg-red-500 text-white px-4 py-2 rounded">Sepeti Temizle</button>
+        <button onClick={handleProceedToPayment} className="bg-green-600 text-white px-4 py-2 rounded">Sipariş Ver</button>
+      </div>
     </div>
   )
 }
